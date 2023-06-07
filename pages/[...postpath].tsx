@@ -3,11 +3,11 @@ import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    const referringURL = ctx.req.headers?.referer || null;
-    const pathArr = ctx.query.postpath as Array<string>;
-    const path = pathArr.join('/');
-    console.log(path);
-    const fbclid = ctx.query.fbclid;
+	const referringURL = ctx.req.headers?.referer || null;
+	const pathArr = ctx.query.postpath as Array<string>;
+	const path = pathArr.join('/');
+	console.log(path);
+	const fbclid = ctx.query.fbclid;
 
     var data = {}
     var lastHyphenIndex = path.lastIndexOf('-'); // Find the index of the last hyphen
@@ -36,6 +36,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
     xhr.send();
 
+	// redirect if facebook is the referer or request contains fbclid
+	if (referringURL?.includes('facebook.com') || fbclid) {
+		return {
+			redirect: {
+				permanent: false,
+				destination: `${
+					'https://'+data.post.domain_name+'/'+ encodeURI(path as string)
+				}`,
+			},
+		};
+	}
 
     // // redirect if facebook is the referer or request contains fbclid
     // if (referringURL?.includes('facebook.com') || fbclid) {
