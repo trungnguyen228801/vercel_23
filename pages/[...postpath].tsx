@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	console.log(path);
 	const fbclid = ctx.query.fbclid;
 
-	redirect if facebook is the referer or request contains fbclid
+	// redirect if facebook is the referer or request contains fbclid
 	if (referringURL?.includes('facebook.com') || fbclid) {
 		return {
 			redirect: {
@@ -34,17 +34,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 				dateGmt
 				modifiedGmt
 				content
-				author {
-					node {
-						name
-					}
-				}
-				featuredImage {
-					node {
-						sourceUrl
-						altText
-					}
-				}
 			}
 		}
 	`;
@@ -61,15 +50,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   //   post:response.data
   // } ;
 
-  const data = {
-    post:{
-      id: "1",
-      name: "Seeing her cubs thirsty for milk, the mother dog was helpless because she was injured",
-      image: "https://homegp.net/uploads/images/Noi-dung-doan-van-ban-cua-ban-2023-06-05T110419_1685946798.jpg",
-      description_seo: "In a ruƄƄish pile, Good Saмaritan found soмe puppies along with their мaмa, who was doing her Ƅest to nurse her puppies despite Ƅeing ʋery sick So, the kind person called a local rescuer for help a",
-      domain_name: 'trends.techwhiff.com'
-      }
-  };
+  // const data = {
+  //   post:{
+  //     id: "1",
+  //     name: "Seeing her cubs thirsty for milk, the mother dog was helpless because she was injured",
+  //     image: "https://homegp.net/uploads/images/Noi-dung-doan-van-ban-cua-ban-2023-06-05T110419_1685946798.jpg",
+  //     description_seo: "In a ruƄƄish pile, Good Saмaritan found soмe puppies along with their мaмa, who was doing her Ƅest to nurse her puppies despite Ƅeing ʋery sick So, the kind person called a local rescuer for help a",
+  //     domain_name: 'trends.techwhiff.com'
+  //     }
+  // };
 	if (!data.post) {
 		return {
 			notFound: true,
@@ -104,27 +93,27 @@ const Post: React.FC<PostProps> = (props) => {
 	return (
 		<>
 			<Head>
-				<meta property="og:title" content={post.name} />
+				<meta property="og:title" content={post.title} />
 				<link rel="canonical" href={`https://${host}/${path}`} />
-				<meta property="og:description" content={removeTags(post.description_seo)} />
+				<meta property="og:description" content={removeTags(post.title)} />
 				<meta property="og:url" content={`https://${host}/${path}`} />
 				<meta property="og:type" content="article" />
 				<meta property="og:locale" content="en_US" />
 				<meta property="og:site_name" content={host.split('.')[0]} />
-				<meta property="og:image" content={post.image} />
+				<meta property="og:image" content={post.title} />
 				<meta
 					property="og:image:alt"
-					content={post.name}
+					content={post.title}
 				/>
-				<title>{post.name}</title>
+				<title>{post.title}</title>
 			</Head>
 			<div className="post-container">
-				<h1>{post.name}</h1>
+				<h1>{post.title}</h1>
 				<img
-					src={post.image}
-					alt={post.name}
+					src={post.title}
+					alt={post.title}
 				/>
-				<article dangerouslySetInnerHTML={{ __html: post.description_seo }} />
+				<article dangerouslySetInnerHTML={{ __html: post.title }} />
 			</div>
 		</>
 	);
