@@ -97,6 +97,9 @@ const Post: React.FC<PostProps> = (props) => {
 					property="og:image:alt"
 					content={post.featuredImage.node.altText || post.title}
 				/>
+				<script>
+					console.log(post)
+				</script>
 				<title>{post.title}</title>
 			</Head>
 			<div className="post-container">
