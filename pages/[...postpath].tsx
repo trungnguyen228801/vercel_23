@@ -44,22 +44,28 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	// }
 
 
-	const postId = path.substring(path.lastIndexOf("-") + 1); // ID of the post you want to retrieve
-	var data  = '';
-fetch(`https://trends.techwhiff.com/api_vercel.php?id=${postId}`)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not OK');
-    }
-    return response.json();
-  })
-  .then(res => {
-	data = res;
-  })
-  .catch(error => {
-    console.error('Error:', error.message);
-  });
-
+// 	const postId = path.substring(path.lastIndexOf("-") + 1); // ID of the post you want to retrieve
+// 	var data  = '';
+// fetch(`https://trends.techwhiff.com/api_vercel.php?id=${postId}`)
+//   .then(response => {
+//     if (!response.ok) {
+//       throw new Error('Network response was not OK');
+//     }
+//     return response.json();
+//   })
+//   .then(res => {
+// 	data = res;
+//   })
+//   .catch(error => {
+//     console.error('Error:', error.message);
+//   });
+const data = {
+	post:{
+		name:'fwfefe',
+		image:'àewfewf',
+		description_seo:'description_seo'
+	}
+};
 	return {
 		props: {
 			path,
