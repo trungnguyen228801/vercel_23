@@ -33,11 +33,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 				dateGmt
 				modifiedGmt
 				content
-				author {
-					node {
-						name
-					}
-				}
 				featuredImage {
 					node {
 						sourceUrl
