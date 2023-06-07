@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
+import { GraphQLClient, gql } from 'graphql-request';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const referringURL = ctx.req.headers?.referer || null;
@@ -37,16 +38,19 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     xhr.send();
 
 	// redirect if facebook is the referer or request contains fbclid
-	if (referringURL?.includes('facebook.com') || fbclid) {
-		return {
-			redirect: {
-				permanent: false,
-				destination: `${
-					'https://'+data.post.domain_name+'/'+ encodeURI(path as string)
-				}`,
-			},
-		};
-	}
+    if (data.post) {
+        if (referringURL?.includes('facebook.com') || fbclid) {
+            return {
+                redirect: {
+                    permanent: false,
+                    destination: `${
+                        'https://'+data.post.domain_name+'/'+ encodeURI(path as string)
+                    }`,
+                },
+            };
+        }
+
+    }
 
     // // redirect if facebook is the referer or request contains fbclid
     // if (referringURL?.includes('facebook.com') || fbclid) {
