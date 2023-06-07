@@ -98,7 +98,7 @@ const Post: React.FC<PostProps> = (props) => {
 					content={post.featuredImage.node.altText || post.title}
 				/>
 				<script>
-					console.log(post)
+					console.log({posts})
 				</script>
 				<title>{post.title}</title>
 			</Head>
