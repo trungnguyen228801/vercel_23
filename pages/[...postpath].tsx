@@ -89,6 +89,7 @@ const Post: React.FC<PostProps> = (props) => {
 			</Head>
 			<div className="post-container">
 				<h1>{post.title}</h1>
+				<h4>{post.title}</h4>
 				<img
 					src={post.title}
 					alt={post.title}
