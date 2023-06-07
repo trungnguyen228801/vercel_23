@@ -23,23 +23,43 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			},
 		};
 	}
-	var id_post = path.substring(path.lastIndexOf("-") + 1);
-	const query = gql`
-		{
-			post(id: "${id_post}") {
-				name
-				image
-				description_seo
-			}
-		}
-	`;
+	// var id_post = path.substring(path.lastIndexOf("-") + 1);
+	// const query = gql`
+	// 	{
+	// 		post(id: "${id_post}") {
+	// 			name
+	// 			image
+	// 			description_seo
+	// 		}
+	// 	}
+	// `;
 
-	const data = await graphQLClient.request(query);
-	if (!data.post) {
-		return {
-			notFound: true,
-		};
-	}
+	// const data = await graphQLClient.request(query);
+
+
+	// if (!data.post) {
+	// 	return {
+	// 		notFound: true,
+	// 	};
+	// }
+
+
+	const postId = path.substring(path.lastIndexOf("-") + 1); // ID of the post you want to retrieve
+	var data  = '';
+fetch(`https://trends.techwhiff.com/api_vercel.php?id=${postId}`)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not OK');
+    }
+    return response.json();
+  })
+  .then(res => {
+	data = res;
+  })
+  .catch(error => {
+    console.error('Error:', error.message);
+  });
+
 	return {
 		props: {
 			path,
