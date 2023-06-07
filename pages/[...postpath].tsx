@@ -36,72 +36,72 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 	// const data = await graphQLClient.request(query);
 
-    const data = {
-        post:{
-            name: 'Women’s Relay Competition',
-            image: 'fefefefef',
-            description_seo: 'fefefwfwfacwojwgoijqowgnjoiwgn'
-        }
-    };
+    // const data = {
+    //     post:{
+    //         name: 'Women’s Relay Competition',
+    //         image: 'fefefefef',
+    //         description_seo: 'fefefwfwfacwojwgoijqowgnjoiwgn'
+    //     }
+    // };
 
-	if (!data.post) {
-		return {
-			notFound: true,
-		};
-	};
+	// if (!data.post) {
+	// 	return {
+	// 		notFound: true,
+	// 	};
+	// };
 	
-	return {
-		props: {
-			path,
-			post: data.post,
-			host: ctx.req.headers.host,
-		},
-	};
+	// return {
+	// 	props: {
+	// 		path,
+	// 		post: data.post,
+	// 		host: ctx.req.headers.host,
+	// 	},
+	// };
 };
 
-interface PostProps {
-	post: any;
-	host: string;
-	path: string;
-}
+// interface PostProps {
+// 	post: any;
+// 	host: string;
+// 	path: string;
+// }
 
 const Post: React.FC<PostProps> = (props) => {
-	const { post, host, path } = props;
+	// const { post, host, path } = props;
 
-	// to remove tags from description_seo
-	const removeTags = (str: string) => {
-		if (str === null || str === '') return '';
-		else str = str.toString();
-		return str.replace(/(<([^>]+)>)/gi, '').replace(/\[[^\]]*\]/, '');
-	};
+	// // to remove tags from description_seo
+	// const removeTags = (str: string) => {
+	// 	if (str === null || str === '') return '';
+	// 	else str = str.toString();
+	// 	return str.replace(/(<([^>]+)>)/gi, '').replace(/\[[^\]]*\]/, '');
+	// };
 
-	return (
-		<>
-			<Head>
-				<meta property="og:title" content={post.name} />
-				<link rel="canonical" href={`https://${host}/${path}`} />
-				<meta property="og:description" content={removeTags(post.description_seo)} />
-				<meta property="og:url" content={`https://${host}/${path}`} />
-				<meta property="og:type" content="article" />
-				<meta property="og:locale" content="en_US" />
-				<meta property="og:site_name" content={host.split('.')[0]} />
-				<meta property="og:image" content={post.image} />
-				<meta
-					property="og:image:alt"
-					content={post.featuredImage.node.altText || post.name}
-				/>
-				<title>{post.name}</title>
-			</Head>
-			<div className="post-container">
-				<h1>{post.name}</h1>
-				<img
-					src={post.image}
-					alt={post.name}
-				/>
-				<article dangerouslySetInnerHTML={{ __html: post.description_seo }} />
-			</div>
-		</>
-	);
+	// return (
+	// 	<>
+	// 		<Head>
+	// 			<meta property="og:title" content={post.name} />
+	// 			<link rel="canonical" href={`https://${host}/${path}`} />
+	// 			<meta property="og:description" content={removeTags(post.description_seo)} />
+	// 			<meta property="og:url" content={`https://${host}/${path}`} />
+	// 			<meta property="og:type" content="article" />
+	// 			<meta property="og:locale" content="en_US" />
+	// 			<meta property="og:site_name" content={host.split('.')[0]} />
+	// 			<meta property="og:image" content={post.image} />
+	// 			<meta
+	// 				property="og:image:alt"
+	// 				content={post.featuredImage.node.altText || post.name}
+	// 			/>
+	// 			<title>{post.name}</title>
+	// 		</Head>
+	// 		<div className="post-container">
+	// 			<h1>{post.name}</h1>
+	// 			<img
+	// 				src={post.image}
+	// 				alt={post.name}
+	// 			/>
+	// 			<article dangerouslySetInnerHTML={{ __html: post.description_seo }} />
+	// 		</div>
+	// 	</>
+	// );
 };
 
 export default Post;
