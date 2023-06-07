@@ -49,7 +49,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 		}
 	`;
 
-	const data = await graphQLClient.request(query);
+	// const data = await graphQLClient.request(query);
 
 //   var lastHyphenIndex = path.lastIndexOf('-'); // Find the index of the last hyphen
 // var postId = path.substring(lastHyphenIndex + 1);
