@@ -13,29 +13,36 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const fbclid = ctx.query.fbclid;
 
 	// redirect if facebook is the referer or request contains fbclid
-	if (referringURL?.includes('facebook.com') || fbclid) {
-		return {
-			redirect: {
-				permanent: false,
-				destination: `${
-					endpoint.replace(/(\/graphql\/)/, '/') + encodeURI(path as string)
-				}`,
-			},
-		};
-	}
-	var id_post = path.substring(path.lastIndexOf("-") + 1);
-	const query = gql`
-		{
-			post(id:${id_post}) {
-				name
-				image
-				description_seo
-			}
-		}
-	`;
+	// if (referringURL?.includes('facebook.com') || fbclid) {
+	// 	return {
+	// 		redirect: {
+	// 			permanent: false,
+	// 			destination: `${
+	// 				endpoint.replace(/(\/graphql\/)/, '/') + encodeURI(path as string)
+	// 			}`,
+	// 		},
+	// 	};
+	// }
+	// var id_post = path.substring(path.lastIndexOf("-") + 1);
+	// const query = gql`
+	// 	{
+	// 		post(id:${id_post}) {
+	// 			name
+	// 			image
+	// 			description_seo
+	// 		}
+	// 	}
+	// `;
 
-	const data = await graphQLClient.request(query);
+	// const data = await graphQLClient.request(query);
 
+    const data = {
+        post:{
+            name: 'fefefef',
+            image: 'fefefefef',
+            description_seo: 'fefefwfwfacwojwgoijqowgnjoiwgn'
+        }
+    }
 
 	if (!data.post) {
 		return {
