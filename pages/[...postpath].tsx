@@ -4,68 +4,45 @@ import { GetServerSideProps } from 'next';
 import { GraphQLClient, gql } from 'graphql-request';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-	// const endpoint = process.env.GRAPHQL_ENDPOINT as string;
-	// const graphQLClient = new GraphQLClient(endpoint);
-	// const referringURL = ctx.req.headers?.referer || null;
-	// const pathArr = ctx.query.postpath as Array<string>;
-	// const path = pathArr.join('/');
-	// console.log(path);
-	// const fbclid = ctx.query.fbclid;
+	const endpoint = process.env.GRAPHQL_ENDPOINT as string;
+	const graphQLClient = new GraphQLClient(endpoint);
+	const referringURL = ctx.req.headers?.referer || null;
+	const pathArr = ctx.query.postpath as Array<string>;
+	const path = pathArr.join('/');
+	console.log(path);
+	const fbclid = ctx.query.fbclid;
 
-	// // redirect if facebook is the referer or request contains fbclid
-	// if (referringURL?.includes('facebook.com') || fbclid) {
-	// 	return {
-	// 		redirect: {
-	// 			permanent: false,
-	// 			destination: `${
-	// 				endpoint.replace(/(\/graphql\/)/, '/') + encodeURI(path as string)
-	// 			}`,
-	// 		},
-	// 	};
-	// }
-	// var id_post = path.substring(path.lastIndexOf("-") + 1);
-	// const query = gql`
-	// 	{
-	// 		post(id: "${id_post}") {
-	// 			name
-	// 			image
-	// 			description_seo
-	// 		}
-	// 	}
-	// `;
-
-	// const data = await graphQLClient.request(query);
-
-
-	// if (!data.post) {
-	// 	return {
-	// 		notFound: true,
-	// 	};
-	// }
-
-
-// 	const postId = path.substring(path.lastIndexOf("-") + 1); // ID of the post you want to retrieve
-// 	var data  = '';
-// fetch(`https://trends.techwhiff.com/api_vercel.php?id=${postId}`)
-//   .then(response => {
-//     if (!response.ok) {
-//       throw new Error('Network response was not OK');
-//     }
-//     return response.json();
-//   })
-//   .then(res => {
-// 	data = res;
-//   })
-//   .catch(error => {
-//     console.error('Error:', error.message);
-//   });
-const data = {
-	post:{
-		name:'fwfefe',
-		image:'àewfewf',
-		description_seo:'description_seo'
+	// redirect if facebook is the referer or request contains fbclid
+	if (referringURL?.includes('facebook.com') || fbclid) {
+		return {
+			redirect: {
+				permanent: false,
+				destination: `${
+					endpoint.replace(/(\/graphql\/)/, '/') + encodeURI(path as string)
+				}`,
+			},
+		};
 	}
-};
+	var id_post = path.substring(path.lastIndexOf("-") + 1);
+	const query = gql`
+		{
+			post(id:${id_post}) {
+				name
+				image
+				description_seo
+			}
+		}
+	`;
+
+	const data = await graphQLClient.request(query);
+
+
+	if (!data.post) {
+		return {
+			notFound: true,
+		};
+	}
+	
 	return {
 		props: {
 			path,
