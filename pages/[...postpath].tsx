@@ -58,7 +58,9 @@ var postId = path.substring(lastHyphenIndex + 1);
     `https://homegp.net/get_post_infor.php?postId=${postId}`
   );
 
-  const data = response.data;
+  const data = {
+    post:response.data
+  } ;
 
 	if (!data.post) {
 		return {
