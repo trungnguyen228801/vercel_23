@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
-import { GraphQLClient, gql } from 'graphql-request';
+import axios from 'axios';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const referringURL = ctx.req.headers?.referer || null;
@@ -9,89 +9,47 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const path = pathArr.join('/');
 	console.log(path);
 	const fbclid = ctx.query.fbclid;
-
-    var data = {}
-    var lastHyphenIndex = path.lastIndexOf('-'); // Find the index of the last hyphen
-    var postId = path.substring(lastHyphenIndex + 1);
-    // Create a new XMLHttpRequest object
-    var xhr = new XMLHttpRequest();
-    // Configure the request
-    xhr.open('GET', 'https://homegp.net/get_post_infor.php?postId=' + postId);
-    xhr.responseType = 'json';
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            var response = xhr.response;
-            if (response) {
-                data = {
-                    post: {
-                        id:response.id,
-                        name:response.name,
-                        image:response.image,
-                        description_seo:response.description_seo,
-                        domain_name:response.domain_name,
-                    }
-                }
-
-            }
-        }
-    };
-    xhr.send();
-
-	// redirect if facebook is the referer or request contains fbclid
-    if (data.post) {
-        if (referringURL?.includes('facebook.com') || fbclid) {
-            return {
-                redirect: {
-                    permanent: false,
-                    destination: `${
-                        'https://'+data.post.domain_name+'/'+ encodeURI(path as string)
-                    }`,
-                },
-            };
-        }
-
-    }
-
-    // // redirect if facebook is the referer or request contains fbclid
-    // if (referringURL?.includes('facebook.com') || fbclid) {
-    // 	return {
-    // 		redirect: {
-    // 			permanent: false,
-    // 			destination: `${
-    // 				endpoint.replace(/(\/graphql\/)/, '/') + encodeURI(path as string)
-    // 			}`,
-    // 		},
-    // 	};
-    // }
-    // const query = gql`
-    // 	{
-    // 		post(id: "/${path}/", idType: URI) {
-    // 			id
-    // 			excerpt
-    // 			title
-    // 			link
-    // 			dateGmt
-    // 			modifiedGmt
-    // 			content
-    // 		}
-    // 	}
-    // `;
-
-    // const data = await graphQLClient.request(query);
-
+    try {
+        var lastHyphenIndex = path.lastIndexOf('-'); // Find the index of the last hyphen
+        var postId = path.substring(lastHyphenIndex + 1);
+        // Make the API request to fetch post information
+        const response = await axios.get(
+          `https://homegp.net/get_post_infor.php?postId=${postId}`
+        );
     
-    if (!data.post) {
-        return {
+        const data = response.data;
+    
+        // Redirect if facebook is the referrer or request contains fbclid
+        if (data.post?.domain_name) {
+          if (referringURL?.includes('facebook.com') || fbclid) {
+            return {
+              redirect: {
+                permanent: false,
+                destination: `https://${data.post.domain_name}/${encodeURI(path)}`,
+              },
+            };
+          }
+        }
+    
+        if (!data.post) {
+          return {
             notFound: true,
-        };
-    }
-    return {
-        props: {
+          };
+        }
+    
+        return {
+          props: {
             path,
             post: data.post,
             host: ctx.req.headers.host,
-        },
-    };
+          },
+        };
+      } catch (error) {
+        console.error('Error fetching post information:', error);
+        return {
+          notFound: true,
+        };
+      }
 };
 
 interface PostProps {
