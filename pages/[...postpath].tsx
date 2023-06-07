@@ -28,12 +28,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
                         image:response.image,
                         description_seo:response.description_seo,
                         domain_name:response.domain_name,
-                        // image: '323',
-                        // title: '323',
-                        // link: '323',
-                        // dateGmt: '323',
-                        // modifiedGmt: '323',
-                        // content: '323',
                     }
                 }
 
