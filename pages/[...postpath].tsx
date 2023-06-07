@@ -12,32 +12,44 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	console.log(path);
 	const fbclid = ctx.query.fbclid;
 
-	// redirect if facebook is the referer or request contains fbclid
-	if (referringURL?.includes('facebook.com') || fbclid) {
-		return {
-			redirect: {
-				permanent: false,
-				destination: `${
-					endpoint.replace(/(\/graphql\/)/, '/') + encodeURI(path as string)
-				}`,
-			},
-		};
-	}
-	const query = gql`
-		{
-			post(id: "/${path}/", idType: URI) {
-				id
-				excerpt
-				title
-				link
-				dateGmt
-				modifiedGmt
-				content
-			}
-		}
-	`;
+	// // redirect if facebook is the referer or request contains fbclid
+	// if (referringURL?.includes('facebook.com') || fbclid) {
+	// 	return {
+	// 		redirect: {
+	// 			permanent: false,
+	// 			destination: `${
+	// 				endpoint.replace(/(\/graphql\/)/, '/') + encodeURI(path as string)
+	// 			}`,
+	// 		},
+	// 	};
+	// }
+	// const query = gql`
+	// 	{
+	// 		post(id: "/${path}/", idType: URI) {
+	// 			id
+	// 			excerpt
+	// 			title
+	// 			link
+	// 			dateGmt
+	// 			modifiedGmt
+	// 			content
+	// 		}
+	// 	}
+	// `;
 
-	const data = await graphQLClient.request(query);
+	// const data = await graphQLClient.request(query);
+
+    const data = {
+        post:{
+            id:'323',
+            excerpt:'323',
+            title:'323',
+            link:'323',
+            dateGmt:'323',
+            modifiedGmt:'323',
+            content:'323',
+        }
+    }
 	if (!data.post) {
 		return {
 			notFound: true,
