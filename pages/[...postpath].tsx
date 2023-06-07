@@ -2,7 +2,6 @@ import React from 'react';
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 import { GraphQLClient, gql } from 'graphql-request';
-// import axios from 'axios';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const endpoint = process.env.GRAPHQL_ENDPOINT as string;
@@ -34,31 +33,22 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 				dateGmt
 				modifiedGmt
 				content
+				author {
+					node {
+						name
+					}
+				}
+				featuredImage {
+					node {
+						sourceUrl
+						altText
+					}
+				}
 			}
 		}
 	`;
 
-	// const data = await graphQLClient.request(query);
-
-//   var lastHyphenIndex = path.lastIndexOf('-'); // Find the index of the last hyphen
-// var postId = path.substring(lastHyphenIndex + 1);
-
-  // const response = await axios.get(
-  //   `https://homegp.net/api/get_post_infor.php?postId=${postId}`
-  // );
-  // const data = {
-  //   post:response.data
-  // } ;
-
-  // const data = {
-  //   post:{
-  //     id: "1",
-  //     name: "Seeing her cubs thirsty for milk, the mother dog was helpless because she was injured",
-  //     image: "https://homegp.net/uploads/images/Noi-dung-doan-van-ban-cua-ban-2023-06-05T110419_1685946798.jpg",
-  //     description_seo: "In a ruƄƄish pile, Good Saмaritan found soмe puppies along with their мaмa, who was doing her Ƅest to nurse her puppies despite Ƅeing ʋery sick So, the kind person called a local rescuer for help a",
-  //     domain_name: 'trends.techwhiff.com'
-  //     }
-  // };
+	const data = await graphQLClient.request(query);
 	if (!data.post) {
 		return {
 			notFound: true,
@@ -79,7 +69,6 @@ interface PostProps {
 	path: string;
 }
 
-
 const Post: React.FC<PostProps> = (props) => {
 	const { post, host, path } = props;
 
@@ -95,25 +84,27 @@ const Post: React.FC<PostProps> = (props) => {
 			<Head>
 				<meta property="og:title" content={post.title} />
 				<link rel="canonical" href={`https://${host}/${path}`} />
-				<meta property="og:description" content={removeTags(post.title)} />
+				<meta property="og:description" content={removeTags(post.excerpt)} />
 				<meta property="og:url" content={`https://${host}/${path}`} />
 				<meta property="og:type" content="article" />
 				<meta property="og:locale" content="en_US" />
 				<meta property="og:site_name" content={host.split('.')[0]} />
-				<meta property="og:image" content={post.title} />
+				<meta property="article:published_time" content={post.dateGmt} />
+				<meta property="article:modified_time" content={post.modifiedGmt} />
+				<meta property="og:image" content={post.featuredImage.node.sourceUrl} />
 				<meta
 					property="og:image:alt"
-					content={post.title}
+					content={post.featuredImage.node.altText || post.title}
 				/>
 				<title>{post.title}</title>
 			</Head>
 			<div className="post-container">
 				<h1>{post.title}</h1>
 				<img
-					src={post.title}
-					alt={post.title}
+					src={post.featuredImage.node.sourceUrl}
+					alt={post.featuredImage.node.altText || post.title}
 				/>
-				<article dangerouslySetInnerHTML={{ __html: post.title }} />
+				<article dangerouslySetInnerHTML={{ __html: post.content }} />
 			</div>
 		</>
 	);
