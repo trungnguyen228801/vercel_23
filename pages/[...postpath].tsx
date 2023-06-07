@@ -23,13 +23,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			},
 		};
 	}
+	var id_post = path.substring(path.lastIndexOf("-") + 1);
 	const query = gql`
 		{
-			post(id: "/${path}/", idType: URI) {
-				id
-				description_seo
+			post(id: "${id_post}") {
 				name
 				image
+				description_seo
 			}
 		}
 	`;
