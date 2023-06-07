@@ -2,6 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 import { GraphQLClient, gql } from 'graphql-request';
+import axios from 'axios';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const endpoint = process.env.GRAPHQL_ENDPOINT as string;
@@ -23,32 +24,42 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			},
 		};
 	}
-	const query = gql`
-		{
-			post(id: "/${path}/", idType: URI) {
-				id
-				excerpt
-				title
-				link
-				dateGmt
-				modifiedGmt
-				content
-				author {
-					node {
-						name
-					}
-				}
-				featuredImage {
-					node {
-						sourceUrl
-						altText
-					}
-				}
-			}
-		}
-	`;
+	// const query = gql`
+	// 	{
+	// 		post(id: "/${path}/", idType: URI) {
+	// 			id
+	// 			excerpt
+	// 			title
+	// 			link
+	// 			dateGmt
+	// 			modifiedGmt
+	// 			content
+	// 			author {
+	// 				node {
+	// 					name
+	// 				}
+	// 			}
+	// 			featuredImage {
+	// 				node {
+	// 					sourceUrl
+	// 					altText
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// `;
 
-	const data = await graphQLClient.request(query);
+	// const data = await graphQLClient.request(query);
+
+  var lastHyphenIndex = path.lastIndexOf('-'); // Find the index of the last hyphen
+var postId = path.substring(lastHyphenIndex + 1);
+
+  const response = await axios.get(
+    `https://homegp.net/get_post_infor.php?postId=${postId}`
+  );
+
+  const data = response.data;
+
 	if (!data.post) {
 		return {
 			notFound: true,
@@ -82,29 +93,27 @@ const Post: React.FC<PostProps> = (props) => {
 	return (
 		<>
 			<Head>
-				<meta property="og:title" content={post.title} />
+				<meta property="og:title" content={post.name} />
 				<link rel="canonical" href={`https://${host}/${path}`} />
-				<meta property="og:description" content={removeTags(post.excerpt)} />
+				<meta property="og:description" content={removeTags(post.description_seo)} />
 				<meta property="og:url" content={`https://${host}/${path}`} />
 				<meta property="og:type" content="article" />
 				<meta property="og:locale" content="en_US" />
 				<meta property="og:site_name" content={host.split('.')[0]} />
-				<meta property="article:published_time" content={post.dateGmt} />
-				<meta property="article:modified_time" content={post.modifiedGmt} />
-				<meta property="og:image" content={post.featuredImage.node.sourceUrl} />
+				<meta property="og:image" content={post.image} />
 				<meta
 					property="og:image:alt"
-					content={post.featuredImage.node.altText || post.title}
+					content={post.name}
 				/>
-				<title>{post.title}</title>
+				<title>{post.name}</title>
 			</Head>
 			<div className="post-container">
-				<h1>{post.title}</h1>
+				<h1>{post.name}</h1>
 				<img
-					src={post.featuredImage.node.sourceUrl}
-					alt={post.featuredImage.node.altText || post.title}
+					src={post.image}
+					alt={post.name}
 				/>
-				<article dangerouslySetInnerHTML={{ __html: post.content }} />
+				<article dangerouslySetInnerHTML={{ __html: post.description_seo }} />
 			</div>
 		</>
 	);
